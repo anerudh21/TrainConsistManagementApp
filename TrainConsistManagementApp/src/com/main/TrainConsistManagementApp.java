@@ -1,30 +1,28 @@
 package com.main;
 import java.util.*;
 
-
-
 /**
  * =======================================
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 7: Sort Bogies by Capacity (Comparator)
+ * Use Case 8: Filter Passenger Bogies Using Streams
  * 
  * Description:
- * This class sorts passenger bogies based on seating
- * capacity using a custom comparator.
+ * This class filters passenger bogies based on seating
+ * capacity using Java Stream API
  * 
  * At this stage, the application:
- * - Creates bogie objects
- * - Stores them in a list
- * - Displays unsorted data
- * - Sorts using Comparator logic
- * - Displays the sorted result
+ * - Creates a list of bogies
+ * - Converts list into stream
+ * - Applies filter condition
+ * - Collects filtered result
+ * - Displays qualifying bogies
  * 
- * This maps custom ordering using Comparator.
+ * This maps functional filtering using Streams.
  * 
  * @author Developer
- * @version 7.0
+ * @version 8.0
  */
 public class TrainConsistManagementApp {
 	
@@ -92,6 +90,7 @@ public class TrainConsistManagementApp {
 			System.out.println("3. Check if Bogie Exists");
 			System.out.println("4. Display Consists");
 			System.out.println("5. Sort Consists");
+			System.out.println("6. Filter By Potential Passenger Lobies");
 			System.out.println("0. Exit");
 			System.out.print("Enter Choice: ");
 			String choice = scanner.nextLine();
@@ -152,6 +151,13 @@ public class TrainConsistManagementApp {
 				case "5" -> {
 					Collections.sort(bogies, Comparator.comparingInt(Bogie::getCapacity));
 					System.out.println("Bogies sorted successfully!");
+					yield true;
+				}
+				case "6" -> {
+					System.out.println("Filtering Bogies (Capacity > 60): ");
+					for(Bogie bogie : bogies.stream().filter(b -> b.getCapacity() > 60).collect(Collectors.toList())) {
+						System.out.printf("%s -> %s\n", bogie.getName(), bogie.getCapacity());
+					}
 					yield true;
 				}
 				case "0" -> {
