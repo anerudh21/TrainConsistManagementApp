@@ -1,28 +1,38 @@
 package com.main;
-import java.util.*;
+
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+
 
 /**
  * =======================================
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 8: Filter Passenger Bogies Using Streams
+ * Use Case 9: Group Bogies by Type
  * 
  * Description:
- * This class filters passenger bogies based on seating
- * capacity using Java Stream API
+ * This class groups similar bogies together using
+ * Java Stream Collectors.groupingBy().
  * 
  * At this stage, the application:
  * - Creates a list of bogies
- * - Converts list into stream
- * - Applies filter condition
- * - Collects filtered result
- * - Displays qualifying bogies
+ * - Streams the list
+ * - Groups bogies by name
+ * - Stores grouped data in a Map
+ * - Displays grouped structures
  * 
- * This maps functional filtering using Streams.
+ * This maps classification logic using groupingBy
  * 
  * @author Developer
- * @version 8.0
+ * @version 9.0
  */
 public class TrainConsistManagementApp {
 	
@@ -91,6 +101,7 @@ public class TrainConsistManagementApp {
 			System.out.println("4. Display Consists");
 			System.out.println("5. Sort Consists");
 			System.out.println("6. Filter By Potential Passenger Lobies");
+			System.out.println("7. Group By Bogie Type");
 			System.out.println("0. Exit");
 			System.out.print("Enter Choice: ");
 			String choice = scanner.nextLine();
@@ -158,6 +169,21 @@ public class TrainConsistManagementApp {
 					for(Bogie bogie : bogies.stream().filter(b -> b.getCapacity() > 60).collect(Collectors.toList())) {
 						System.out.printf("%s -> %s\n", bogie.getName(), bogie.getCapacity());
 					}
+					yield true;
+				}
+				case "7" -> {
+					// ---- GROUP USING COLLECTORS.GROUPINGBY ----
+					Map<String, List<Bogie>> groupedBogies = bogies.stream().collect(Collectors.groupingBy(Bogie::getName));
+					
+					// Display grouped structure
+					System.out.println("\nGrouped Bogies: \n");
+					for(Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
+						System.out.printf("Boogie Type: %s\n", entry.getKey());
+						for(Bogie bogie : entry.getValue()) {
+							System.out.printf("Capacity -> %s\n", bogie.getCapacity());
+						}
+					}
+					System.out.println();
 					yield true;
 				}
 				case "0" -> {
