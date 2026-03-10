@@ -1,27 +1,33 @@
 package com.main;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+
+
 
 /**
  * =======================================
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 5: Preserve Insertion Order of Bogies
+ * Use Case 6: Map Bogie to Capacity (HashMap)
  * 
  * Description:
- * This class maintains the exact attachment order of bogies
- * while also preventing duplicate entries using LinkedHashSet.
+ * This class associates each bogie with its seating or 
+ * load capacity using a key-value mapping structure.
  * 
  * At this stage, the application:
- * - Attaches bogies in order
- * - Preserves insertion sequence
- * - Avoids duplicate bogies
- * - Displays final train formation
+ * - Creates a HashMap for bogie-capacity mapping
+ * - Inserts capacity values for each bogie
+ * - Iterates through map entries
+ * - Displays  bogie and capacity information
  * 
- * This maps ordered uniqueness using LinkedHashSet.
+ * This maps lookup-based access using HashMap.
  * 
  * @author Developer
- * @version 5.0
+ * @version 6.0
  */
 public class TrainConsistManagementApp {
 	
@@ -39,19 +45,21 @@ public class TrainConsistManagementApp {
 		System.out.println("   === Train Consist Management App ===   ");
 		System.out.println("==========================================");
 		
-		// LinkedHashSet preserves order and ensures uniqueness
-		Set<String> formation = new LinkedHashSet<>();
+
+		// HashMap stores data in key -> value format
+		Map<String, Integer> capacityMap = new HashMap<>();
+
 		
 		//Display initial consist information
 		System.out.println("Train initializaed sucessfully");
-		System.out.println("Inital Bogie Count: " + formation.size());
-		System.out.println("Current Train Consist: " + formation);
+		System.out.println("Inital Bogie Count: " + capacityMap.size());
+		System.out.println("Current Train Consist: " + capacityMap.keySet());
 		System.out.println("\nSystem ready for operations\n");
 		
 		boolean inMenu = true;
 		
 		while(inMenu) {
-			System.out.println("1. Add Bogies");
+			System.out.println("\n1. Add Bogies");
 			System.out.println("2. Remove Bogies");
 			System.out.println("3. Check if Bogie Exists");
 			System.out.println("4. Display Consists");
@@ -63,27 +71,25 @@ public class TrainConsistManagementApp {
 				case "1" -> {
 					System.out.print("Enter the name of bogie to add: ");
 					String bogie = scanner.nextLine();
+					
+					System.out.print("Enter the capacity of bogie to add: ");
+					String capacity = scanner.nextLine();
 			
-					if(formation.add(bogie)) {
-						System.out.printf("Added bogie [%s] to train successfully.\n", bogie);
-					}else {
-						System.out.printf("Duplicate Ignored: [%s] already in train.\n", bogie);
-					}
-					
-					
-					
+					capacityMap.put(bogie, Integer.parseInt(capacity));
+					System.out.printf("Added bogie [%s] of [%s] capacity to train successfully.\n", bogie, capacity);
+							
 					yield true;
 				}
 				case "2" -> {
 					System.out.print("Enter name of bogie to remove: ");
 					String bogie = scanner.nextLine();
 					
-					if(!formation.contains(bogie)) {
+					if(!capacityMap.keySet().contains(bogie)) {
 						System.out.printf("The bogie [%s] does not exist.\n", bogie);
 						yield true;
 					}
 					
-					formation.remove(bogie);
+					capacityMap.remove(bogie);
 					System.out.printf("Removed bogie [%s] from train successfully.\n", bogie);
 					
 					yield true;
@@ -92,7 +98,7 @@ public class TrainConsistManagementApp {
 					System.out.print("Enter name of bogie to check: ");
 					String bogie = scanner.nextLine();
 					
-					if(formation.contains(bogie)) {
+					if(capacityMap.keySet().contains(bogie)) {
 						System.out.printf("Contains \'%s\'? :  true\n", bogie);
 					} else {
 						System.out.printf("Contains \'%s\'? :  false\n", bogie);
@@ -101,7 +107,11 @@ public class TrainConsistManagementApp {
 					yield true;
 				}
 				case "4" -> {
-					System.out.println(formation);
+					
+					System.out.println("Bogie Capacity Details");
+					for(Entry<String, Integer> entry : capacityMap.entrySet()) {
+						System.out.printf("%s -> %d\n", entry.getKey(), entry.getValue());
+					}
 					yield true;
 				}
 				case "0" -> {
