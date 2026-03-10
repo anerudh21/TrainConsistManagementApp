@@ -16,23 +16,22 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 9: Group Bogies by Type
+ * Use Case 10: Count Total Seats in Train
  * 
  * Description:
- * This class groups similar bogies together using
- * Java Stream Collectors.groupingBy().
+ * This class aggregates seating capacity od all bogies
+ * into a single total using Stream reduce().
  * 
  * At this stage, the application:
  * - Creates a list of bogies
- * - Streams the list
- * - Groups bogies by name
- * - Stores grouped data in a Map
- * - Displays grouped structures
+ * - Maps bogies to capacity
+ * - Reduces values into total
+ * - Displays total seat count
  * 
- * This maps classification logic using groupingBy
+ * This maps aggregation logic using reduce().
  * 
  * @author Developer
- * @version 9.0
+ * @version 10.0
  */
 public class TrainConsistManagementApp {
 	
@@ -102,6 +101,7 @@ public class TrainConsistManagementApp {
 			System.out.println("5. Sort Consists");
 			System.out.println("6. Filter By Potential Passenger Lobies");
 			System.out.println("7. Group By Bogie Type");
+			System.out.println("8. Get Total Capacity");
 			System.out.println("0. Exit");
 			System.out.print("Enter Choice: ");
 			String choice = scanner.nextLine();
@@ -184,6 +184,10 @@ public class TrainConsistManagementApp {
 						}
 					}
 					System.out.println();
+					yield true;
+				}
+				case "8" -> {
+					System.out.printf("Total Seating Capacity of Train: %d\n", bogies.stream().map(b -> b.getCapacity()).reduce(0, Integer::sum));
 					yield true;
 				}
 				case "0" -> {
