@@ -6,22 +6,21 @@ import java.util.*;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 2: Add Passenger Bogies to Train
+ * Use Case 3: Track Unique Bogie IDs
  * 
  * Description:
- * This class demonstrates how passenger bogies can be
- * managed dynamically using ArrayList operations
+ * This class ensures that duplicate bogie IDs are not
+ * added into the train formation using HashSet
  * 
  * At this stage, the application:
- * - Adds new bogies to the train
- * - Removes existing bogies
- * - Checks for bogie availability
- * - Displays the final consist
+ * - Stores bogie IDs
+ * - Prevents duplicate automatically
+ * - Displays unique identifiers
  * 
- * This maps CRUD operations using ArrayList.
+ * This maps uniqueness validation using Set.
  * 
  * @author Developer
- * @version 2.0
+ * @version 3.0
  */
 public class TrainConsistManagementApp {
 	
@@ -39,13 +38,14 @@ public class TrainConsistManagementApp {
 		System.out.println("   === Train Consist Management App ===   ");
 		System.out.println("==========================================");
 		
-		// Create a dynamic list to store train bogies
-		List<String> trainConsist = new ArrayList<>();
+		// Create a Set to store unique bogie IDs
+		// HashSet stores only unique values
+		Set<String> bogies = new HashSet<>();
 		
 		//Display initial consist information
 		System.out.println("Train initializaed sucessfully");
-		System.out.println("Inital Bogie Count: " + trainConsist.size());
-		System.out.println("Current Train Consist: " + trainConsist);
+		System.out.println("Inital Bogie Count: " + bogies.size());
+		System.out.println("Current Train Consist: " + bogies);
 		System.out.println("\nSystem ready for operations\n");
 		
 		boolean inMenu = true;
@@ -61,32 +61,36 @@ public class TrainConsistManagementApp {
 			
 			inMenu = switch(choice) {
 				case "1" -> {
-					System.out.print("Enter the name of bogie to add: ");
+					System.out.print("Enter the ID of bogie to add: ");
 					String bogie = scanner.nextLine();
 					
-					trainConsist.add(bogie);
-					System.out.printf("Added bogie [%s] to train successfully.\n", bogie);
+					if(bogies.add(bogie)) {
+						System.out.printf("Added bogie [%s] to train successfully.\n", bogie);
+					}else {
+						System.out.printf("Duplicated bogie [%s] ignored.\n", bogie);
+					}
+					
 					yield true;
 				}
 				case "2" -> {
-					System.out.print("Enter name of bogie to remove: ");
+					System.out.print("Enter ID of bogie to remove: ");
 					String bogie = scanner.nextLine();
 					
-					if(!trainConsist.contains(bogie)) {
+					if(!bogies.contains(bogie)) {
 						System.out.printf("The bogie [%s] does not exist.\n", bogie);
 						yield true;
 					}
 					
-					trainConsist.remove(bogie);
+					bogies.remove(bogie);
 					System.out.printf("Removed bogie [%s] from train successfully.\n", bogie);
 					
 					yield true;
 				}
 				case "3" -> {
-					System.out.print("Enter name of bogie to check: ");
+					System.out.print("Enter ID of bogie to check: ");
 					String bogie = scanner.nextLine();
 					
-					if(trainConsist.contains(bogie)) {
+					if(bogies.contains(bogie)) {
 						System.out.printf("Contains \'%s\'? :  true\n", bogie);
 					} else {
 						System.out.printf("Contains \'%s\'? :  false\n", bogie);
@@ -95,7 +99,7 @@ public class TrainConsistManagementApp {
 					yield true;
 				}
 				case "4" -> {
-					System.out.println(trainConsist);
+					System.out.println(bogies);
 					yield true;
 				}
 				case "0" -> {
