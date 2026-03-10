@@ -6,21 +6,22 @@ import java.util.*;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 3: Track Unique Bogie IDs
+ * Use Case 5: Preserve Insertion Order of Bogies
  * 
  * Description:
- * This class ensures that duplicate bogie IDs are not
- * added into the train formation using HashSet
+ * This class maintains the exact attachment order of bogies
+ * while also preventing duplicate entries using LinkedHashSet.
  * 
  * At this stage, the application:
- * - Stores bogie IDs
- * - Prevents duplicate automatically
- * - Displays unique identifiers
+ * - Attaches bogies in order
+ * - Preserves insertion sequence
+ * - Avoids duplicate bogies
+ * - Displays final train formation
  * 
- * This maps uniqueness validation using Set.
+ * This maps ordered uniqueness using LinkedHashSet.
  * 
  * @author Developer
- * @version 3.0
+ * @version 5.0
  */
 public class TrainConsistManagementApp {
 	
@@ -38,14 +39,13 @@ public class TrainConsistManagementApp {
 		System.out.println("   === Train Consist Management App ===   ");
 		System.out.println("==========================================");
 		
-		// Create a Set to store unique bogie IDs
-		// HashSet stores only unique values
-		Set<String> bogies = new HashSet<>();
+		// LinkedHashSet preserves order and ensures uniqueness
+		Set<String> formation = new LinkedHashSet<>();
 		
 		//Display initial consist information
 		System.out.println("Train initializaed sucessfully");
-		System.out.println("Inital Bogie Count: " + bogies.size());
-		System.out.println("Current Train Consist: " + bogies);
+		System.out.println("Inital Bogie Count: " + formation.size());
+		System.out.println("Current Train Consist: " + formation);
 		System.out.println("\nSystem ready for operations\n");
 		
 		boolean inMenu = true;
@@ -61,36 +61,38 @@ public class TrainConsistManagementApp {
 			
 			inMenu = switch(choice) {
 				case "1" -> {
-					System.out.print("Enter the ID of bogie to add: ");
+					System.out.print("Enter the name of bogie to add: ");
 					String bogie = scanner.nextLine();
-					
-					if(bogies.add(bogie)) {
+			
+					if(formation.add(bogie)) {
 						System.out.printf("Added bogie [%s] to train successfully.\n", bogie);
 					}else {
-						System.out.printf("Duplicated bogie [%s] ignored.\n", bogie);
+						System.out.printf("Duplicate Ignored: [%s] already in train.\n", bogie);
 					}
+					
+					
 					
 					yield true;
 				}
 				case "2" -> {
-					System.out.print("Enter ID of bogie to remove: ");
+					System.out.print("Enter name of bogie to remove: ");
 					String bogie = scanner.nextLine();
 					
-					if(!bogies.contains(bogie)) {
+					if(!formation.contains(bogie)) {
 						System.out.printf("The bogie [%s] does not exist.\n", bogie);
 						yield true;
 					}
 					
-					bogies.remove(bogie);
+					formation.remove(bogie);
 					System.out.printf("Removed bogie [%s] from train successfully.\n", bogie);
 					
 					yield true;
 				}
 				case "3" -> {
-					System.out.print("Enter ID of bogie to check: ");
+					System.out.print("Enter name of bogie to check: ");
 					String bogie = scanner.nextLine();
 					
-					if(bogies.contains(bogie)) {
+					if(formation.contains(bogie)) {
 						System.out.printf("Contains \'%s\'? :  true\n", bogie);
 					} else {
 						System.out.printf("Contains \'%s\'? :  false\n", bogie);
@@ -99,7 +101,7 @@ public class TrainConsistManagementApp {
 					yield true;
 				}
 				case "4" -> {
-					System.out.println(bogies);
+					System.out.println(formation);
 					yield true;
 				}
 				case "0" -> {
