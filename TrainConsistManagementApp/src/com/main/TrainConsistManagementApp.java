@@ -18,23 +18,23 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 13: Performance Comparision (Loops vs Streams)
+ * Use Case 14: Handle Invalid Bogie Capacity (Custom Exception)
  * 
  * Description:
- * This class compared execution time of loop-based filtering
- * versus stream-based filtering using System.nanoTime() 
+ * This class prevents creation of passenger bogies
+ * with invalid seating capacity using a custom exception
  *  
  * At this stage, the application:
- * - Creates a bogie test dataset
- * - Measures loop execution time
- * - Measures stream execution time
- * - Calculation elapsed duration
- * - Displays performance results
+ * - Defines a custom exception
+ * - Validate capacity inside constructor
+ * - Throws exception is capacity <= 0
+ * - Prevents invalid bogie creation
+ * - Continues execution safely
  * 
- * This maps performance benchmarking using high-resoltion timing.
+ * This maps fail-fast validation using checked exceptions.
  * 
  * @author Developer
- * @version 13.0
+ * @version 14.0
  */
 public class TrainConsistManagementApp {
 
@@ -78,7 +78,11 @@ public class TrainConsistManagementApp {
 
 			inMenu = switch(choice) {
 			case "1" -> {
-				handleConsistFlow(bogies, scanner);
+				try {
+					handleConsistFlow(bogies, scanner);
+				}catch(InvalidCapacityException e) {
+					System.out.println("Error: " + e.getMessage());
+				}
 				yield true;
 			}
 			case "2" -> {
@@ -101,7 +105,7 @@ public class TrainConsistManagementApp {
 		scanner.close();
 	}
 
-	private static void handleConsistFlow(List<Bogie> bogies, Scanner scanner) {
+	private static void handleConsistFlow(List<Bogie> bogies, Scanner scanner) throws InvalidCapacityException {
 		boolean inMenu = true;
 
 		while(inMenu) {
@@ -125,6 +129,7 @@ public class TrainConsistManagementApp {
 
 				System.out.print("Enter the capacity of bogie to add: ");
 				String capacity = scanner.nextLine();
+				
 
 				bogies.add(new Bogie(bogie, Integer.parseInt(capacity)));
 				System.out.printf("Added bogie [%s] of [%s] capacity to train successfully.\n", bogie, capacity);
@@ -383,7 +388,10 @@ class Bogie{
 	private String name;
 	private int capacity;
 
-	public Bogie(String name, int capacity) {
+	public Bogie(String name, int capacity) throws InvalidCapacityException{
+		if(capacity <= 0) {
+			throw new InvalidCapacityException("Capacity must be greater than zero");
+		}
 		this.name = name;
 		this.capacity = capacity;
 	}
@@ -444,3 +452,13 @@ class GoodsBogie{
 	}
 }
 
+/**
+ * Class to represent the exception thrown on invalid bogie capacity
+ */
+// ---- CUSTOM EXCEPTION ----
+@SuppressWarnings("serial")
+class InvalidCapacityException extends Exception {
+	public InvalidCapacityException(String message) {
+		super(message);
+	}
+}
