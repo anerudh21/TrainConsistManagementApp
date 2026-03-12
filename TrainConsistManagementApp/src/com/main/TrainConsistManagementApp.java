@@ -19,28 +19,25 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 19: Binary Search for Bogie ID
+ * Use Case 20: Exception Handling During Search Operations
  * 
  * Description:
- * This class demonstrates searching for a specific bogie ID
- * using the Binary Search algorithm on sorted data.
+ * This class prevents searching when no bogies exist
+ * by applying fail-fast validation using exceptions.
  * 
  * At this stage, the application:
- * - Creates an array of bogie IDs
- * - Accepts a search key
- * - Applies binary search logic
- * - Narrows search range each iteration
- * - Displays results
+ * - Creates bogie collection
+ * - Validates system state
+ * - Throws exception if empty
+ * - Stops invalid search operation
+ * - Displays meaningful message
  * 
- * This maps optimizedd searching logic using divide-and-conquer
+ * This maps defensive programming using runtime exceptions.
  * 
  * @author Developer
- * @version 19.0
+ * @version 20.0
  */
 public class TrainConsistManagementApp {
-
-	// Inner Bogie class to model passanger bogies
-
 
 	/**
 	 * Main entry point to the app
@@ -112,7 +109,7 @@ public class TrainConsistManagementApp {
 		scanner.close();
 	}
 
-	private static void handleConsistFlow(List<Bogie> bogies, Scanner scanner) throws InvalidCapacityException {
+	private static void handleConsistFlow(List<Bogie> bogies, Scanner scanner) throws InvalidCapacityException, IllegalStateException {
 		boolean inMenu = true;
 
 		while(inMenu) {
@@ -260,6 +257,12 @@ public class TrainConsistManagementApp {
 			case "11" -> {
 				// Create array of bogie IDs
 				String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+				
+				// ---- FAIL-FAST VALIDATION ---
+				// Check if train has bogies before performing search
+				if(bogieIds.length == 0) {
+					throw new IllegalStateException("No bogies available in train. Cannot perform search");
+				}
 				
 				// Bogie ID to search
 				System.out.print("Enter Bogie ID to Search: ");
@@ -567,6 +570,17 @@ class InvalidCapacityException extends Exception {
 @SuppressWarnings("serial")
 class CargoSafetyException extends RuntimeException {
 	public CargoSafetyException(String message) {
+		super(message);
+	}
+}
+
+/**
+* Class to represent a custom exception for invalid search state
+*/
+// ---- CUSTOM EXCEPTION ----
+@SuppressWarnings("serial")
+class IllegalStateException extends RuntimeException {
+	public IllegalStateException(String message) {
 		super(message);
 	}
 }
