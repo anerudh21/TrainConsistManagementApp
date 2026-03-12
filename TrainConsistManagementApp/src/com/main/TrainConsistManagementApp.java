@@ -19,23 +19,23 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 18: Linear Search for Bogie ID
+ * Use Case 19: Binary Search for Bogie ID
  * 
  * Description:
  * This class demonstrates searching for a specific bogie ID
- * using a simple Linear Seach Algorithm
+ * using the Binary Search algorithm on sorted data.
  * 
  * At this stage, the application:
  * - Creates an array of bogie IDs
  * - Accepts a search key
- * - Traverses array sequentially
- * - Stops when match is found
- * - Displays search result
+ * - Applies binary search logic
+ * - Narrows search range each iteration
+ * - Displays results
  * 
- * This maps basic searching logic using sequential traversal.
+ * This maps optimizedd searching logic using divide-and-conquer
  * 
  * @author Developer
- * @version 18.0
+ * @version 19.0
  */
 public class TrainConsistManagementApp {
 
@@ -271,15 +271,26 @@ public class TrainConsistManagementApp {
 					System.out.println(id);
 				}
 				
-				// ---- LINEAR SEARCH LOGIC ----
-				// Traverse each element sequentially
+				// Ensure data is sorted before binary search (precondition)
+				
+				// ---- BINARY SEARCH LOGIC ----
 				boolean found = false;
-				for(String id : bogieIds) {
-					if(searchId.equals(id)) {
+				
+				int start = 0;
+				int end = bogieIds.length;
+				
+				while(start <= end) {
+					int mid = start + (end - start) / 2;
+					if(bogieIds[mid].equals(searchId)) {
 						found = true;
 						break;
+					}else if(searchId.compareTo(bogieIds[mid]) < 0) {
+						end = mid - 1;
+					}else {
+						start = mid + 1;
 					}
 				}
+				
 				
 				if(found) {
 					System.out.printf("Bogie %s found in train consist\n", searchId);
