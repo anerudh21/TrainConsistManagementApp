@@ -18,21 +18,22 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 11: Validate Train ID and Cargo Code
+ * Use Case 12: Safety Compliance Check for Good Bogies
  * 
  * Description:
- * This class validates input formats using Regular Expressions
+ * This class enforces domain safety on goods bogies.
  * 
  * At this stage, the application:
- * - Accepts Train ID input
- * - Accepts Cargo Code input
- * - Applies regex validation
- * - Displays validation result
+ * - Creates a goods bogie list
+ * - Converts list to a stream
+ * - Applies safety validation rule
+ * - Checks compliance using allMatch()
+ * - Displays safety status
  * 
- * This maps format validation logic using Pattern matching
+ * This maps real-world cargo safety rules using Streams.
  * 
  * @author Developer
- * @version 11.0
+ * @version 12.0
  */
 public class TrainConsistManagementApp {
 
@@ -68,7 +69,8 @@ public class TrainConsistManagementApp {
 		while(inMenu) {
 			System.out.println("--- Train App Menu ---");
 			System.out.println("1. Manage Train Consists");
-			System.out.println("2. Validate IDs");
+			System.out.println("2. Manage Cargo Trains");
+			System.out.println("3. Validate IDs");
 			System.out.println("0. Exit");
 			System.out.print("Enter Choice: ");
 			String choice = scanner.nextLine();
@@ -79,6 +81,10 @@ public class TrainConsistManagementApp {
 				yield true;
 			}
 			case "2" -> {
+				handleCargoTrainFlow(scanner);
+				yield true;
+			}
+			case "3" -> {
 				handleValidationFlow(scanner);
 				yield true;
 			}
@@ -262,6 +268,97 @@ public class TrainConsistManagementApp {
 
 
 	}
+	
+	private static void handleCargoTrainFlow(Scanner scanner) {
+		List<GoodsBogie> goodsBogies = new ArrayList<>();
+		
+		boolean inMenu = true;
+		
+		while(inMenu) {
+			System.out.println("\n--- Cargo Train Consist Menu ---");
+			System.out.println("1. Add Bogies");
+			System.out.println("2. Remove Bogies");
+			System.out.println("3. Check if Bogie Exists");
+			System.out.println("4. Check Cargo Compliance");
+			System.out.println("5. Display Consists");
+			System.out.println("0. Exit");
+			System.out.print("Enter Choice: ");
+			String choice = scanner.nextLine();
+
+			inMenu = switch(choice) {
+			case "1" -> {
+				System.out.print("Enter the type of goods bogie to add: ");
+				String type = scanner.nextLine();
+
+				System.out.print("Enter the cargo of to add: ");
+				String cargo = scanner.nextLine();
+
+				goodsBogies.add(new GoodsBogie(type, cargo));
+				System.out.printf("Added good bogie [%s] with cargo [%s] to train successfully.\n", type, cargo);
+
+				yield true;
+			}
+			case "2" -> {
+				System.out.print("Enter type of bogie to remove: ");
+				String type = scanner.nextLine();
+
+				for(GoodsBogie b : goodsBogies) {
+					if(b.getType().equals(type)) {
+						goodsBogies.remove(b);
+						System.out.printf("Removed bogie type [%s] from train successfully.\n", type);
+						yield true;
+					}
+				}
+
+				System.out.printf("The bogie type [%s] does not exist.\n", type);
+				yield true;
+
+			}
+			case "3" -> {
+				System.out.print("Enter type of bogie to check: ");
+				String type = scanner.nextLine();
+
+				for(GoodsBogie b : goodsBogies) {
+					if(b.getType().equals(type)) {
+						System.out.printf("Contains \'%s\'? :  true\n", type);
+						yield true;
+					}
+				}
+
+				System.out.printf("Contains \'%s\'? :  false\n", type);
+
+				yield true;
+			}
+			case "4" -> {
+				
+				boolean isSafe = goodsBogies.stream().allMatch(b -> b.getType().equalsIgnoreCase("Cylindrical") && b.getCargo().equalsIgnoreCase("Coal"));
+				
+				System.out.println("Safety Complicance Status: " + isSafe);
+				System.out.println("Train formation is " + (isSafe ? "SAFE" : "NOT SAFE"));
+				
+				yield true;
+			}
+			case "5" -> {
+				System.out.println("Bogie Capacity Details:-\n");
+
+				for(GoodsBogie bogie : goodsBogies) {
+					System.out.printf("%s -> %s\n", bogie.getType(), bogie.getCargo());
+				}
+
+				yield true;
+			}
+			case "0" -> {
+				System.out.println("Exititng to main menu....");
+				yield false;
+			}
+			default -> {
+				System.out.println("Invalid Choice!!");
+				yield true;
+			}
+			};
+		}
+		
+	}
 }
 
 /**
@@ -297,3 +394,38 @@ class Bogie{
 		return String.format("(%s, %s)", name, capacity);
 	}
 }
+
+/**
+ * Class to represent a Goods Bogie
+ */
+class GoodsBogie{
+	String type;
+	String cargo;
+	
+	public GoodsBogie(String type, String cargo) {
+		this.type = type;
+		this.cargo = cargo;
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+	
+	public String getCargo() {
+		return this.cargo;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("(%s, %s)", type, cargo);
+	}
+}
+
