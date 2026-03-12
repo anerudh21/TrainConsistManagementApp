@@ -18,23 +18,24 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 14: Handle Invalid Bogie Capacity (Custom Exception)
+ * Use Case 15: Safe Cargo Assignment Using try-catch-finally
  * 
  * Description:
- * This class prevents creation of passenger bogies
- * with invalid seating capacity using a custom exception
- *  
- * At this stage, the application:
- * - Defines a custom exception
- * - Validate capacity inside constructor
- * - Throws exception is capacity <= 0
- * - Prevents invalid bogie creation
- * - Continues execution safely
+ * This class safely assigns cargo to goods bogies
+ * while handling insafe combinations using structured
+ * exception handling blocks
  * 
- * This maps fail-fast validation using checked exceptions.
+ * At this stage, the application:
+ * - Defines a custom runtime exception
+ * - Validate cargo assignment rules
+ * - Throws exception for unsafe cargo
+ * - Catches and handles the exception
+ * - Executes finally block for logging
+ * 
+ * This maps runtime safety handling using try-catch-finally
  * 
  * @author Developer
- * @version 14.0
+ * @version 15.0
  */
 public class TrainConsistManagementApp {
 
@@ -86,7 +87,13 @@ public class TrainConsistManagementApp {
 				yield true;
 			}
 			case "2" -> {
-				handleCargoTrainFlow(scanner);
+				try {
+					handleCargoTrainFlow(scanner);
+				}catch(CargoSafetyException e) {
+					System.out.println("Error: " + e.getMessage());
+				}finally {
+					System.out.println("Cargo validation completed for all bogies");
+				}
 				yield true;
 			}
 			case "3" -> {
@@ -275,7 +282,7 @@ public class TrainConsistManagementApp {
 
 	}
 	
-	private static void handleCargoTrainFlow(Scanner scanner) {
+	private static void handleCargoTrainFlow(Scanner scanner) throws CargoSafetyException{
 		List<GoodsBogie> goodsBogies = new ArrayList<>();
 		
 		boolean inMenu = true;
@@ -355,6 +362,10 @@ public class TrainConsistManagementApp {
 				
 				System.out.println("Safety Complicance Status: " + isSafe);
 				System.out.println("Train formation is " + (isSafe ? "SAFE" : "NOT SAFE"));
+				
+				if(!isSafe) {
+					throw new CargoSafetyException("Unsafe for cargo assignment");
+				}
 				
 				yield true;
 			}
@@ -459,6 +470,18 @@ class GoodsBogie{
 @SuppressWarnings("serial")
 class InvalidCapacityException extends Exception {
 	public InvalidCapacityException(String message) {
+		super(message);
+	}
+}
+
+
+/**
+* Class to represent a custom runtime exception for invalid cargo
+*/
+// ---- CUSTOM RUNTIME EXCEPTION ----
+@SuppressWarnings("serial")
+class CargoSafetyException extends RuntimeException {
+	public CargoSafetyException(String message) {
 		super(message);
 	}
 }
