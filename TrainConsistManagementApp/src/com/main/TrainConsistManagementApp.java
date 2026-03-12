@@ -19,21 +19,23 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 17: Sort Bogie Names Using Arrays.sort()
+ * Use Case 18: Linear Search for Bogie ID
  * 
  * Description:
- * This class demonstrates sorting of bogie type names
- * alphabetically using Java;s built-in Arrays.sort() method.
+ * This class demonstrates searching for a specific bogie ID
+ * using a simple Linear Seach Algorithm
  * 
  * At this stage, the application:
- * - Creates an array of bogie names
- * - Uses Arrays.sort() for sorting
- * - Displays sorted results
+ * - Creates an array of bogie IDs
+ * - Accepts a search key
+ * - Traverses array sequentially
+ * - Stops when match is found
+ * - Displays search result
  * 
- * This maps optimized sorting using Java library utilities.
+ * This maps basic searching logic using sequential traversal.
  * 
  * @author Developer
- * @version 17.0
+ * @version 18.0
  */
 public class TrainConsistManagementApp {
 
@@ -125,6 +127,7 @@ public class TrainConsistManagementApp {
 			System.out.println("8. Get Total Capacity");
 			System.out.println("9. Sorting of Capacities Using Bubble Sort");
 			System.out.println("10. Sorting of Bogie Types Alphabetically");
+			System.out.println("11. Search for Bogie ID (predefiend list)");
 			System.out.println("0. Exit");
 			System.out.print("Enter Choice: ");
 			String choice = scanner.nextLine();
@@ -252,6 +255,37 @@ public class TrainConsistManagementApp {
 				Arrays.sort(types);
 				System.out.println("Sorted Bogie Names (Alphabetical): \n" + Arrays.toString(types) + "\n");
 				
+				yield true;
+			}
+			case "11" -> {
+				// Create array of bogie IDs
+				String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+				
+				// Bogie ID to search
+				System.out.print("Enter Bogie ID to Search: ");
+				String searchId = scanner.nextLine();
+				
+				// Display all bogies
+				System.out.println("Available Bogie IDs: ");
+				for(String id : bogieIds) {
+					System.out.println(id);
+				}
+				
+				// ---- LINEAR SEARCH LOGIC ----
+				// Traverse each element sequentially
+				boolean found = false;
+				for(String id : bogieIds) {
+					if(searchId.equals(id)) {
+						found = true;
+						break;
+					}
+				}
+				
+				if(found) {
+					System.out.printf("Bogie %s found in train consist\n", searchId);
+				}else {
+					System.out.printf("Bogie %s NOT found in train consist\n", searchId);
+				}
 				yield true;
 			}
 			case "0" -> {
