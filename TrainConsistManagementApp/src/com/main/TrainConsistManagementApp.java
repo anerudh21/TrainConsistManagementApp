@@ -2,6 +2,7 @@ package com.main;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -18,24 +19,24 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 15: Safe Cargo Assignment Using try-catch-finally
+ * Use Case 16: Sort Passenger Bogies by Capacity
  * 
  * Description:
- * This class safely assigns cargo to goods bogies
- * while handling insafe combinations using structured
- * exception handling blocks
+ * This class demonstrates manual sorting of passenger
+ * bogie capacities using the Bubble Sort algorithm
+ * instead of built-in sorting utilities.
  * 
  * At this stage, the application:
- * - Defines a custom runtime exception
- * - Validate cargo assignment rules
- * - Throws exception for unsafe cargo
- * - Catches and handles the exception
- * - Executes finally block for logging
+ * - Creates an array of capacities
+ * - Compares adjacent values
+ * - Swaps values when required
+ * - Repeats passes until sorted
+ * - Displays sorted result
  * 
- * This maps runtime safety handling using try-catch-finally
+ * This maps algorithmic sorting logic using Bubble Sort.
  * 
  * @author Developer
- * @version 15.0
+ * @version 16.0
  */
 public class TrainConsistManagementApp {
 
@@ -125,6 +126,7 @@ public class TrainConsistManagementApp {
 			System.out.println("6. Filter By Potential Passenger Lobies");
 			System.out.println("7. Group By Bogie Type");
 			System.out.println("8. Get Total Capacity");
+			System.out.println("9. Sorting of Capacities Using Bubble Sort");
 			System.out.println("0. Exit");
 			System.out.print("Enter Choice: ");
 			String choice = scanner.nextLine();
@@ -212,6 +214,31 @@ public class TrainConsistManagementApp {
 			}
 			case "8" -> {
 				System.out.printf("Total Seating Capacity of Train: %d\n", bogies.stream().map(b -> b.getCapacity()).reduce(0, Integer::sum));
+				yield true;
+			}
+			case "9" -> {
+				int capacities[] = new int[bogies.size()];
+				
+				int idx = 0;
+				for(Bogie bogie : bogies) {
+					capacities[idx] = bogie.getCapacity();
+					idx++;
+				}
+				
+				System.out.println("Original Capacities: " + Arrays.toString(capacities));
+				
+				// ---- BUBBLE SORT LOGIC ----
+				for(int i = 0; i < capacities.length - 1; i++) {
+					for(int j  = 0; j < capacities.length - i - 1; j++) {
+						if(capacities[i] > capacities[i + 1]) {
+							int temp = capacities[i];
+							capacities[i] = capacities[i + 1];
+							capacities[i + 1] = temp;
+						}
+					}
+				}
+				
+				System.out.println("Sorted Capacities (Ascending): " + Arrays.toString(capacities));
 				yield true;
 			}
 			case "0" -> {
