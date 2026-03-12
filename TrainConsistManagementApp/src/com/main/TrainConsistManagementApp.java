@@ -18,22 +18,23 @@ import java.util.stream.Collectors;
  * MAIN CLASS - TrainConsistManagementApp
  * =======================================
  * 
- * Use Case 12: Safety Compliance Check for Good Bogies
+ * Use Case 13: Performance Comparision (Loops vs Streams)
  * 
  * Description:
- * This class enforces domain safety on goods bogies.
- * 
+ * This class compared execution time of loop-based filtering
+ * versus stream-based filtering using System.nanoTime() 
+ *  
  * At this stage, the application:
- * - Creates a goods bogie list
- * - Converts list to a stream
- * - Applies safety validation rule
- * - Checks compliance using allMatch()
- * - Displays safety status
+ * - Creates a bogie test dataset
+ * - Measures loop execution time
+ * - Measures stream execution time
+ * - Calculation elapsed duration
+ * - Displays performance results
  * 
- * This maps real-world cargo safety rules using Streams.
+ * This maps performance benchmarking using high-resoltion timing.
  * 
  * @author Developer
- * @version 12.0
+ * @version 13.0
  */
 public class TrainConsistManagementApp {
 
@@ -331,7 +332,21 @@ public class TrainConsistManagementApp {
 			}
 			case "4" -> {
 				
+				long startStream = System.nanoTime();
 				boolean isSafe = goodsBogies.stream().allMatch(b -> b.getType().equalsIgnoreCase("Cylindrical") && b.getCargo().equalsIgnoreCase("Coal"));
+				long endStream = System.nanoTime();
+				
+				long startLoop = System.nanoTime();
+				for(GoodsBogie bogie : goodsBogies) {
+					if(bogie.getType().equalsIgnoreCase("Cylindrical") && bogie.getCargo().equalsIgnoreCase("Coal")) {
+						isSafe = false;
+						break;
+					}
+				}
+				long endLoop = System.nanoTime();
+				
+				System.out.println("Loop: " + (endLoop - startLoop));
+				System.out.println("Stream: " + (endStream - startStream));
 				
 				System.out.println("Safety Complicance Status: " + isSafe);
 				System.out.println("Train formation is " + (isSafe ? "SAFE" : "NOT SAFE"));
